@@ -1,0 +1,37 @@
+<!-- /templates/page.liquid -->
+<!--<div class="grid">
+  <div class="grid__item large--five-sixths push--large--one-twelfth">
+
+    <header class="section-header text-center">
+      <h1>{{ page.title }}</h1>
+      <hr class="hr--small">
+      <div class="text-center rte rte--nomargin rte--indented-images">
+          {{ page.content }}
+      </div>
+    </header>
+
+  </div>
+</div>-->
+<div id="shopify-section-featured-content-our-orphans" class="shopify-section index-section rich-text-section">
+  <div data-section-id="featured-content" data-section-type="featured-content-section">
+    <div class="rich-text wrapper">
+      <div class="grid">
+        <div class="grid__item text-center large--two-thirds medium--two-thirds push--large--one-sixth push--medium--one-sixth">
+
+            <div class="section-header">
+              <h2 class="rich-text__heading--large section-header__title h1">{{ page.title }}</h2>
+              <hr class="hr--small">
+          	</div> 	
+
+            <div class="rte rich-text__text--large">
+              <p>{{ page.content }}</p>
+            </div>
+
+        </div>
+      </div>
+      <div class="mt-5">
+      	{% section 'featured-row-orphans' %}
+      </div>
+    </div>
+  </div>
+</div>

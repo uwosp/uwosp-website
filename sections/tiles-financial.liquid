@@ -1,0 +1,307 @@
+<div class="container p-0">
+  
+    <div class="d-flex justify-content-center mb-4">
+      
+      <div class="controls filter-financial-wrapper">
+        
+       	<button class="h4 filter-financial-btn smooth-transition
+                       px-4 py-1 mx-3 d-none d-{{ section.settings.filter_breakpoint }}-inline-block"
+                type="button"
+                data-filter="all"
+                onclick="apply_filter_btn(this)"
+                >All</button>
+        
+        {% assign filters = section.settings.filters | newline_to_br | split: '<br />' %}
+        {% for f in filters %}
+        <button class="h4 filter-financial-btn smooth-transition
+                       px-4 py-1 mx-3 d-none d-{{ section.settings.filter_breakpoint }}-inline-block"
+                type="button"
+                data-filter=".{{ f | strip }}"
+                onclick="apply_filter_btn(this)"
+                >{{ f }}</button>
+      	{% endfor %}
+        
+        <select class="h4 filter-financial-select
+                       d-inline-block d-{{ section.settings.filter_breakpoint }}-none"
+				onchange="apply_filter_select(this)">
+			<option value="all" selected>All</option>
+        	{% for f in filters %}
+        	<option value=".{{ f | strip }}">{{ f }}</option>
+        	{% endfor %}
+        </select>
+        
+      </div>  
+    </div>
+    
+    <div class="container m-n1" id="financial-container">
+	  <div class="row no-gutters justify-content-center">
+      
+	  {% for block in section.blocks %}
+      
+      	<div class="col-12 col-sm-6 p-1 tile-card mix {{ block.settings.filter | strip }}">
+          <div class="tile-card-link-wrapper">
+          	<a class="tile-card-link" href="{{ block.settings.url_link }}">
+            	{% assign img_url = block.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' %}
+              
+                <img class="tile-card-img lazyload fade-in smooth-transition"
+                   	 src="{{ block.settings.image | img_url: '300x' }}"
+                  	 data-src="{{ img_url }}"
+                  	 data-widths="[540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2048, 4472]"
+                  	 data-aspectratio="{{ block.settings.image.aspect_ratio }}"
+                  	 data-sizes="auto"
+                  	 data-parent-fit="cover"
+                 	 data-hero-image
+                 	 alt="{{ block.settings.image.alt | escape }}"
+                 	 style="object-position: {{ block.settings.image_position }}">
+              	
+              	<span class="tile-card-overlay">
+              		<h2 class="tile-card-heading h2" style="color: {{ section.settings.heading_color }};">
+                      {{ block.settings.heading | escape }}
+                  	</h2>
+                </span>
+            </a>
+          </div>
+        </div>
+        
+      {% endfor %}
+       
+      </div>
+    </div>
+</div>
+
+<!-- Mixitup -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mixitup/3.3.1/mixitup.min.js" integrity="sha512-nKZDK+ztK6Ug+2B6DZx+QtgeyAmo9YThZob8O3xgjqhw2IVQdAITFasl/jqbyDwclMkLXFOZRiytnUrXk/PM6A==" crossorigin="anonymous"></script>
+
+<script>
+
+var mixer = mixitup("#financial-container");
+  
+function apply_filter_btn(btn_elm) {
+  	$(".filter-financial-select").val(btn_elm.getAttribute("data-filter"));
+}
+  
+function apply_filter_select(sel_elm) {
+  	mixer.filter(sel_elm.value);
+}
+
+// === Workaround for object-fit (not supported in IE) ================== //
+function resize_tile_img() {
+  	$(".tile-card-link-wrapper").each(function() {
+      	var $img = $(this).find("img");
+      	var aspect_ratio_comp = parseFloat($img.attr("data-aspectratio")) < ($(this).width() / $(this).height());
+      	$img.css("width", aspect_ratio_comp ? "100%" : "auto");
+      	$img.css("height", aspect_ratio_comp ? "auto" : "100%");
+    });
+}
+// ====================================================================== //
+  
+$(document).ready(function() {
+  	if ("objectFit" in document.documentElement.style === false) {
+    	resize_tile_img();
+      	window.addEventListener("resize", resize_tile_img);
+    }
+});
+
+</script>
+
+{% style %}
+
+.filter-financial-btn-wrapper {
+	text-align: center;
+}
+
+.filter-financial-btn {
+	display: inline-block;
+	text-align: center;
+	background-color: transparent !important;
+	color: {{ section.settings.filter_color_default }} !important;
+}
+
+.filter-financial-btn:hover, .filter-financial-btn.mixitup-control-active {
+	background-color: {{ section.settings.filter_background_color_selected }} !important;
+	color: {{ section.settings.filter_color_selected }} !important;
+}
+
+.inactive-filter-btn {
+	background-color: transparent !important;
+	color: {{ section.settings.filter_color_default }} !important;
+}
+
+.active-filter-btn {
+	background-color: {{ section.settings.filter_background_color_selected }} !important;
+	color: {{ section.settings.filter_color_selected }} !important;
+}
+
+.tile-card-link-wrapper {
+	position: relative;
+	overflow: hidden;
+	height: 150px;
+}
+
+.tile-card-img {
+	width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.tile-card-link:hover > .tile-card-img {
+	-webkit-transform: scale(1.05);
+    -moz-transform:	   scale(1.05);
+	-ms-transform:	   scale(1.05);
+    -o-transform:	   scale(1.05);
+    transform:		   scale(1.05);
+}
+
+.tile-card-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+
+	{% assign opacity_alpha = section.settings.image_overlay_opacity | divided_by: 100.00 %}
+	{% assign opacity_alpha_3 = opacity_alpha | plus: 0.25 | at_most: 1.0 %}
+	{% assign opacity_alpha_2 = opacity_alpha_3 | minus: opacity_alpha | divided_by: 2.0 | plus: opacity_alpha %}
+
+	background-image: linear-gradient(to bottom,
+									  {{ section.settings.overlay_color | color_modify: 'alpha', opacity_alpha }},
+									  {{ section.settings.overlay_color | color_modify: 'alpha', opacity_alpha }} calc(100% - 150px),
+									  {{ section.settings.overlay_color | color_modify: 'alpha', opacity_alpha_2 }} calc(100% - 60px),
+									  {{ section.settings.overlay_color | color_modify: 'alpha', opacity_alpha_3 }});
+}
+
+.tile-card-heading {
+	text-align: center;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+    -moz-transform:	   translate(-50%, -50%);
+	-ms-transform:	   translate(-50%, -50%);
+    -o-transform:	   translate(-50%, -50%);
+	transform: 		   translate(-50%, -50%);
+}
+
+@media only screen and (min-width: 576px) {
+	.tile-card-link-wrapper {
+		height: 200px;
+	}
+}
+
+@media only screen and (min-width: 768px) {
+	.tile-card-link-wrapper {
+		height: 250px;
+	}
+}
+
+{% endstyle %}
+
+{% schema %}
+  {
+    "name": "Tiles - Financial",
+    "max_blocks": 20,
+	"settings": [
+		{
+          	"type": "color",
+          	"id": "heading_color",
+          	"label": "Heading Color",
+          	"default": "#ffffff"
+        },
+		{
+          	"type": "color",
+          	"id": "filter_color_default",
+          	"label": "Filter Button Text Color (Default)",
+          	"default": "#000000"
+        },
+		{
+          	"type": "color",
+          	"id": "filter_background_color_selected",
+          	"label": "Filter Button Background Color (Selected)",
+          	"default": "#000000"
+        },
+		{
+          	"type": "color",
+          	"id": "filter_color_selected",
+          	"label": "Filter Button Text Color (Selected)",
+          	"default": "#ffffff"
+        },
+		{
+			"type": "color",
+			"id": "overlay_color",
+			"label": "Overlay Color",
+			"default": "#000000"
+		},
+		{
+        	"type": "range",
+        	"id": "image_overlay_opacity",
+        	"label": "Overlay opacity",
+        	"min": 0,
+        	"max": 100,
+        	"step": 1,
+        	"unit": "%",
+        	"default": 25
+        },
+		{
+			"type": "textarea",
+			"id": "filters",
+			"label": "Filters"
+		},
+		{
+			"type": "select",
+			"id": "filter_breakpoint",
+			"label": "Filter Breakpoint",
+			"default": "sm",
+			"options": [
+				{"value": "sm", "label": "Small Screen"},
+				{"value": "md", "label": "Medium Screen"},
+				{"value": "lg", "label": "Large Screen"}
+			]
+		}
+	],
+	"blocks": [
+		{
+			"type": "tile",
+			"name": "Tile",
+			"settings": [
+				{
+					"type": "text",
+					"id": "heading",
+					"label": "Heading"
+				},
+				{
+					"type": "image_picker",
+					"id": "image",
+					"label": "Image"
+				},
+				{
+          			"type": "select",
+          			"id": "image_position",
+          			"label": "Image position",
+          			"default": "center center",
+          			"options": [
+            			{ "label": "Top left", "value": "left top" },
+            			{ "label": "Top center", "value": "center top" },
+            			{ "label": "Top right", "value": "right top" },
+            			{ "label": "Middle left", "value": "left center"},
+            			{ "label": "Middle center", "value": "center center" },
+            			{ "label": "Middle right", "value": "right center" },
+            			{ "label": "Bottom left", "value": "left bottom" },
+            			{ "label": "Bottom center", "value": "center bottom" },
+            			{ "label": "Bottom right", "value": "right bottom" }
+          			]
+        		},
+				{
+					"type": "url",
+					"id": "url_link",
+					"label": "URL Link"
+				},
+				{
+					"type": "text",
+					"id": "filter",
+					"label": "Filter"
+				}
+			]
+		}
+	]
+  }
+{% endschema %}

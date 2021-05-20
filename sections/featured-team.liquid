@@ -1,0 +1,108 @@
+<div class="grid">
+  <div class="grid__item large--four-fifths push--large--one-tenth">
+
+{% for block in section.blocks %}
+    
+    {% assign names = block.settings.names | newline_to_br | split: '<br />' %}
+    {% assign images = block.settings.image_links | newline_to_br | split: '<br />' %}
+    
+    <div class="container {% if forloop.first == false %}mt-5{% endif %}">
+      
+      <div class="row mb-2">
+        <div class="col">
+          {% if block.settings.subteam_name != blank %}
+              <h2 class="h3">{{ block.settings.subteam_name | escape }}</h2>
+          {% endif %}
+        </div>
+      </div>
+      
+      <div class="row mb-n4">
+      
+      {% if names.size == images.size %}
+    	{% for n in names %}
+    
+    		<div class="col-6 col-md-4 col-lg-3 mb-4">
+              <div class="team-member-img-wrapper">
+                <img class="team-member-img lazyload" 
+                     src="{{ images[forloop.index0] }}"
+                     alt="{{ n | escape }}">
+              </div>
+              <div class="team-member-name mt-3">{{ n | escape }}</div>
+              {% if forloop.first and block.settings.first_heading != blank %}
+              <div class="team-member-title mt-3">{{ block.settings.first_heading | escape }}</div>
+              {% endif %}
+    		</div>
+    
+    	{% endfor %}
+      {% endif %}
+      
+      </div>
+    </div>
+
+{% endfor %}
+
+  </div>
+</div>
+
+{% stylesheet %}
+
+.team-member-img-wrapper {
+	display: block;
+	text-align: center;
+}
+
+.team-member-img {
+	border-radius: 50%;
+	max-width: 150px;
+	width: 100%;
+	height: auto;
+}
+
+.team-member-name {
+	display: block;
+	text-align: center;
+}
+
+.team-member-name-title {
+	display: block;
+	text-align: center;
+	font-style: italic;
+}
+
+{% endstylesheet %}
+
+{% schema %}
+{
+    "name": "Featured team",
+	"max_blocks": 10,
+    "settings": [],
+	"blocks": [
+		{
+			"type": "subteam_section",
+			"name": "Subteam Section",
+			"settings": [
+				{
+					"type": "text",
+					"id": "subteam_name",
+					"label": "Subteam Name"
+				},
+				{
+					"type": "text",
+					"id": "first_heading",
+					"label": "First Heading"
+				},
+				{
+            		"type": "textarea",
+            		"id": "names",
+            		"label": "Team Member Names"
+        		},
+				{
+            		"type": "textarea",
+            		"id": "image_links",
+            		"label": "Team Member Image Links"
+        		}
+			]
+		}
+	]
+}
+{% endschema %}

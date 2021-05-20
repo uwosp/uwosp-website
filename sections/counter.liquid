@@ -1,0 +1,228 @@
+{% if section.blocks.size > 0 %}
+
+<div class="counter-wrapper page-width">
+  
+  {% assign img_url = section.settings.background_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' %}
+  <img class="counter-img lazyload fade-in smooth-transition"
+       src="{{ section.settings.background_image | img_url: '300x' }}"
+       data-src="{{ img_url }}"
+       data-widths="[540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2048, 4472]"
+       data-aspectratio="{{ section.settings.background_image.aspect_ratio }}"
+       data-sizes="auto"
+       data-parent-fit="cover"
+       data-hero-image
+       alt="{{ section.settings.background_image.alt | escape }}"
+       style="object-position: {{ section.settings.image_position }}">
+  
+  <div class="counter-overlay"></div>
+  
+  <div class="counter-item-wrapper container p-4">
+    <div class="row justify-content-center">
+  	{% for block in section.blocks %}
+  
+  	  <div class="counter-item text-center col-12 col-sm-6 col-md-3"
+           data-value="{{ block.settings.end_val }}">
+        <div class="counter-item-icon">
+          <i class="{{ block.settings.icon_class }}"></i>
+        </div>
+    	<h1 class="counter-item-value">
+          {% if block.settings.include_dollar %}<span>$</span>{% endif %}
+          <span class="counter-item-count">0</span>
+          {% if block.settings.include_plus %}<span>+</span>{% endif %}
+        </h1>
+        <h5 class="counter-item-heading">
+          {{ block.settings.heading }}
+        </h5>
+  	  </div>
+  
+  	{% endfor %}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- Inview Plugin -->
+<script>
+  !function(a){"function"==typeof define&&define.amd?define(["jquery"],a):"object"==typeof exports?module.exports=a(require("jquery")):a(jQuery)}(function(a){function i(){var b,c,d={height:f.innerHeight,width:f.innerWidth};return d.height||(b=e.compatMode,(b||!a.support.boxModel)&&(c="CSS1Compat"===b?g:e.body,d={height:c.clientHeight,width:c.clientWidth})),d}function j(){return{top:f.pageYOffset||g.scrollTop||e.body.scrollTop,left:f.pageXOffset||g.scrollLeft||e.body.scrollLeft}}function k(){if(b.length){var e=0,f=a.map(b,function(a){var b=a.data.selector,c=a.$element;return b?c.find(b):c});for(c=c||i(),d=d||j();e<b.length;e++)if(a.contains(g,f[e][0])){var h=a(f[e]),k={height:h[0].offsetHeight,width:h[0].offsetWidth},l=h.offset(),m=h.data("inview");if(!d||!c)return;l.top+k.height>d.top&&l.top<d.top+c.height&&l.left+k.width>d.left&&l.left<d.left+c.width?m||h.data("inview",!0).trigger("inview",[!0]):m&&h.data("inview",!1).trigger("inview",[!1])}}}var c,d,h,b=[],e=document,f=window,g=e.documentElement;a.event.special.inview={add:function(c){b.push({data:c,$element:a(this),element:this}),!h&&b.length&&(h=setInterval(k,250))},remove:function(a){for(var c=0;c<b.length;c++){var d=b[c];if(d.element===this&&d.data.guid===a.guid){b.splice(c,1);break}}b.length||(clearInterval(h),h=null)}},a(f).on("scroll resize scrollstop",function(){c=d=null}),!g.addEventListener&&g.attachEvent&&g.attachEvent("onfocusin",function(){d=null})});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-countto@1.2.0/jquery.countTo.js"></script>
+
+<script>
+
+var count = 0;
+$(".counter-item-wrapper").on("inview", function(event, visible) {
+  if (count == 0 && visible) {
+    count++;
+    $(".counter-item").each(function() {
+      var dataValue = parseInt($(this).attr("data-value"));
+      $(this).find(".counter-item-count").countTo({
+        from: 0,
+        to: dataValue,
+        speed: 1500,
+        refreshInterval: 50
+      });
+    });
+  }
+});
+  
+// Workaround for object-fit (not supported in IE)
+function resize_tile_img() {
+  	$(".tile-card-link-wrapper").each(function() {
+      	var $img = $(this).find("img");
+      	var aspect_ratio_comp = parseFloat($img.attr("data-aspectratio")) < ($(this).width() / $(this).height());
+      	$img.css("width", aspect_ratio_comp ? "100%" : "auto");
+      	$img.css("height", aspect_ratio_comp ? "auto" : "100%");
+    });
+}
+  
+$(document).ready(function() {
+  if ("objectFit" in document.documentElement.style === false) {
+  	resize_tile_img();
+    window.addEventListener("resize", resize_tile_img);
+  }
+});
+  
+</script>
+
+{% style %}
+
+.counter-wrapper {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	position: relative;
+}
+
+.counter-img {
+	position: absolute;
+	width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.counter-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+
+	{% assign opacity_alpha = section.settings.image_overlay_opacity | divided_by: 100.00 %}
+	{% assign opacity_alpha_3 = opacity_alpha | plus: 0.25 | at_most: 1.0 %}
+	{% assign opacity_alpha_2 = opacity_alpha_3 | minus: opacity_alpha | divided_by: 2.0 | plus: opacity_alpha %}
+
+	background-image: linear-gradient(to bottom,
+									  {{ section.settings.overlay_color | color_modify: 'alpha', opacity_alpha }},
+									  {{ section.settings.overlay_color | color_modify: 'alpha', opacity_alpha }} calc(100% - 150px),
+									  {{ section.settings.overlay_color | color_modify: 'alpha', opacity_alpha_2 }} calc(100% - 60px),
+									  {{ section.settings.overlay_color | color_modify: 'alpha', opacity_alpha_3 }});
+}
+
+.counter-item {
+	color: white;
+}
+
+.counter-item-icon {
+	font-size: 4rem;
+}
+
+.counter-item-value {
+	color: white !important;
+}
+
+.counter-item-heading {
+	color: white !important;
+}
+
+{% endstyle %}
+
+{% schema %}
+  {
+    "name": "Counter",
+	"max_blocks": 4,
+    "settings": [
+		{
+			"type": "image_picker",
+			"id": "background_image",
+			"label": "Background Image"
+		},
+		{
+            "type": "select",
+            "id": "image_position",
+            "label": "Modal Image position",
+            "default": "center center",
+            "options": [
+                { "label": "Top left", "value": "left top" },
+                { "label": "Top center", "value": "center top" },
+                { "label": "Top right", "value": "right top" },
+                { "label": "Middle left", "value": "left center"},
+                { "label": "Middle center", "value": "center center" },
+                { "label": "Middle right", "value": "right center" },
+                { "label": "Bottom left", "value": "left bottom" },
+                { "label": "Bottom center", "value": "center bottom" },
+                { "label": "Bottom right", "value": "right bottom" }
+            ]
+        },
+		{
+			"type": "color",
+			"id": "overlay_color",
+			"label": "Overlay Color"
+		},
+		{
+          "type": "range",
+          "id": "image_overlay_opacity",
+          "label": "Overlay opacity",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 25
+        }
+	],
+	"blocks": [
+		{
+			"type": "stat",
+			"name": "Stat",
+			"settings": [
+				{
+					"type": "text",
+					"id": "heading",
+					"label": "Heading"
+				},
+				{
+					"type": "text",
+					"id": "end_val",
+					"label": "End Value"
+				},
+				{
+					"type": "checkbox",
+					"id": "include_dollar",
+					"label": "Include Dollar Sign",
+					"default": false
+				},
+				{
+					"type": "checkbox",
+					"id": "include_plus",
+					"label": "Include Plus Sign",
+					"default": false
+				},
+				{
+					"type": "text",
+					"id": "icon_class",
+					"label": "Icon Class",
+					"info": "e.g. 'fas fa-user'"
+				}
+			]
+		}
+	],
+	"presets": [
+		{
+			"name": "Counter",
+			"category": "Image"
+		}
+	]
+  }
+{% endschema %}
+
+{% javascript %}
+{% endjavascript %}

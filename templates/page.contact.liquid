@@ -1,0 +1,77 @@
+<!-- /templates/page.contact.liquid -->
+<div id="shopify-section-featured-content-contact" class="shopify-section index-section rich-text-section">
+  <div data-section-id="featured-content" data-section-type="featured-content-section">
+    <div class="rich-text wrapper">
+      <div class="grid">
+        <div class="grid__item text-center large--two-thirds medium--two-thirds push--large--one-sixth push--medium--one-sixth">
+
+            <div class="section-header">
+              <h2 class="rich-text__heading--large section-header__title h1">{{ page.title }}</h2>
+              <hr class="hr--small">
+          	</div>
+
+            <div class="rte rich-text__text--large">
+              <p>{{ page.content }}</p>
+            </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="index-sections mt-5" data-sections-wrapper>
+    <div class="grid">
+      <div class="grid__item large--four-fifths push--large--one-tenth">
+        <div class="form-vertical">
+          {% form 'contact' %}
+
+          {% if form.posted_successfully? %}
+          <p class="note form-success">
+            {{ 'contact.form.post_success' | t }}
+          </p>
+          {% endif %}
+
+          {{ form.errors | default_errors }}
+          
+          <div class="grid grid--small">
+            <div class="grid__item large--one-half">
+              <label for="ContactFormName" class="form-label m-0 rte rich-text__text--large">{{ 'contact.form.name' | t }}&nbsp;*</label>
+          	  <input required type="text" id="ContactFormName" class="input-full" name="contact[{{ 'contact.form.name' | t }}]" autocapitalize="words" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}">
+            </div>
+            
+            <div class="grid__item large--one-half">
+              <label for="ContactFormEmail" class="form-label m-0 rte rich-text__text--large">{{ 'contact.form.email' | t }}&nbsp;*</label>
+          	  <input required type="email" id="ContactFormEmail" class="input-full" name="contact[email]" autocorrect="off" autocapitalize="off" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}">
+			</div>
+          </div>
+
+          <label for="ContactFormPhone" class="form-label m-0 rte rich-text__text--large">{{ 'contact.form.phone' | t }}</label>
+          <input type="tel" id="ContactFormPhone" class="input-full" name="contact[{{ 'contact.form.phone' | t }}]" pattern="[0-9\-]*" value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}">
+
+          <label for="ContactFormMessage" class="form-label m-0 rte rich-text__text--large">{{ 'contact.form.message' | t }}&nbsp;*</label>
+          <textarea required rows="10" id="ContactFormMessage" class="input-full" name="contact[{{ 'contact.form.message' | t }}]">{% if form.body %}{{ form.body }}{% endif %}</textarea>
+          
+		  <button type="submit" class="btn right">
+			<i class="fas fa-paper-plane" aria-hidden="true"></i>&numsp;{{ 'contact.form.send' | t }}
+		  </button>
+			
+          {% endform %}
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+{% style %}
+
+.form-label {
+	font-style: normal;
+}
+
+.input-full {
+	border: 1px solid #cccccc;
+	border-radius: 0.25rem;
+	font-style: normal;
+}
+
+{% endstyle %}

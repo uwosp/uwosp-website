@@ -1,0 +1,269 @@
+<footer class="site-footer small--text-center" role="contentinfo" data-section-id="{{ section.id }}" data-section-type="footer-section">
+  <div class="wrapper container-fluid">
+      
+      {% assign num_footer_columns = linklists[section.settings.footer_link_list].links.size | plus: 1 %}
+
+      {% assign footer_social_enable = false %}
+      {% if
+        settings.social_twitter_link != blank
+        or settings.social_facebook_link != blank
+        or settings.social_pinterest_link != blank
+        or settings.social_google_plus_link != blank
+        or settings.social_instagram_link != blank
+        or settings.social_tumblr_link != blank
+        or settings.social_youtube_link != blank
+        or settings.social_vimeo_link != blank
+        or settings.social_fancy_link != blank
+        or settings.social_snapchat_link != blank
+        or settings.social_linkedin_link != blank
+      %}
+        {% assign footer_social_enable = true %}
+      {% endif %}
+    
+    {% capture footer_social %}
+    
+    {% if footer_social_enable %}
+    
+    <div class="social-media-wrapper w-100 text-center pb-2">
+      
+      <div>Follow us on:</div>
+      
+      <div class="d-flex flex-row justify-content-center align-items-center">
+        
+        {% assign social_media_padding = "mx-1" %}
+        
+        {% if settings.social_facebook_link != blank %}
+        <div class="social-media-link-wrapper {{ social_media_padding }}">
+          <a href="{{ settings.social_facebook_link | escape }}"
+             title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Facebook' }}"
+             class="social-media-link w-100 h-100 d-flex justify-content-center align-items-center">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+        </div>
+        {% endif %}
+        {% if settings.social_twitter_link != blank %}
+        <div class="social-media-link-wrapper {{ social_media_padding }}">
+          <a href="{{ settings.social_twitter_link | escape }}"
+             title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Twitter' }}"
+             class="social-media-link w-100 h-100 d-flex justify-content-center align-items-center">
+            <i class="fab fa-twitter"></i>
+          </a>
+        </div>
+        {% endif %}
+        {% if settings.social_pinterest_link != blank %}
+        <div class="social-media-link-wrapper {{ social_media_padding }}">
+          <a href="{{ settings.social_pinterest_link | escape }}"
+             title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Pinterest' }}"
+             class="social-media-link w-100 h-100 d-flex justify-content-center align-items-center">
+            <i class="fab fa-pinterest-p"></i>
+          </a>
+        </div>
+        {% endif %}
+        {% if settings.social_instagram_link != blank %}
+        <div class="social-media-link-wrapper {{ social_media_padding }}">
+          <a href="{{ settings.social_instagram_link | escape }}"
+             title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Instagram' }}"
+             class="social-media-link w-100 h-100 d-flex justify-content-center align-items-center">
+            <i class="fab fa-instagram"></i>
+          </a>
+        </div>
+        {% endif %}
+        {% if settings.social_snapchat_link != blank %}
+        <div class="social-media-link-wrapper {{ social_media_padding }}">
+          <a href="{{ settings.social_snapchat_link | escape }}"
+             title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Snapchat' }}"
+             class="social-media-link w-100 h-100 d-flex justify-content-center align-items-center">
+            <i class="fab fa-snapchat-ghost"></i>
+          </a>
+        </div>
+        {% endif %}
+        {% if settings.social_google_plus_link != blank %}
+        <div class="social-media-link-wrapper {{ social_media_padding }}">
+          <a href="{{ settings.social_google_plus_link | escape }}"
+             rel="publisher"
+             title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Google Plus' }}"
+             class="social-media-link w-100 h-100 d-flex justify-content-center align-items-center">
+            <i class="fab fa-google-plus-g"></i>
+          </a>
+        </div>
+        {% endif %}
+        {% if settings.social_tumblr_link != blank %}
+        <div class="social-media-link-wrapper {{ social_media_padding }}">
+          <a href="{{ settings.social_tumblr_link | escape }}"
+             title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Tumblr' }}"
+             class="social-media-link w-100 h-100 d-flex justify-content-center align-items-center">
+            <i class="fab fa-tumblr"></i>
+          </a>
+        </div>
+        {% endif %}
+        {% if settings.social_youtube_link != blank %}
+        <div class="social-media-link-wrapper {{ social_media_padding }}">
+          <a href="{{ settings.social_youtube_link | escape }}"
+             title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'YouTube' }}"
+             class="social-media-link w-100 h-100 d-flex justify-content-center align-items-center">
+            <i class="fab fa-youtube"></i>
+          </a>
+        </div>
+        {% endif %}
+        {% if settings.social_vimeo_link != blank %}
+        <div class="social-media-link-wrapper {{ social_media_padding }}">
+          <a href="{{ settings.social_vimeo_link | escape }}"
+             title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Vimeo' }}"
+             class="social-media-link w-100 h-100 d-flex justify-content-center align-items-center">
+            <i class="fab fa-vimeo-v"></i>
+          </a>
+        </div>
+        {% endif %}
+        {% if settings.social_fancy_link != blank %}
+        <div class="social-media-link-wrapper {{ social_media_padding }}">
+          <a href="{{ settings.social_fancy_link | escape }}"
+             title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Fancy' }}"
+             class="social-media-link w-100 h-100 d-flex justify-content-center align-items-center">
+            <span class="icon icon-fancy" aria-hidden="true"></span>
+          </a>
+        </div>
+        {% endif %}
+        {% if settings.social_linkedin_link != blank %}
+        <div class="social-media-link-wrapper {{ social_media_padding }}">
+          <a href="{{ settings.social_linkedin_link | escape }}"
+             title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'LinkedIn' }}"
+             class="social-media-link w-100 h-100 d-flex justify-content-center align-items-center">
+            <i class="fab fa-linkedin-in"></i>
+          </a>
+        </div>
+        {% endif %}
+        
+      </div>
+    </div>
+    
+    {% endif %}
+    
+    {% endcapture %}
+    
+    {% capture logo_column %}
+    
+      <div class="d-inline-block text-center m-0">
+        {% capture image_size %}{{ section.settings.logo_max_width | escape }}x{% endcapture %}
+        <a href="{{ routes.root_url }}" class="d-flex flex-row align-items-center justify-content-md-left justify-content-center">
+          <img class="m-0"
+               src="{{ section.settings.logo | img_url: image_size }}"
+               srcset="{{ section.settings.logo | img_url: image_size }} 1x, {{ section.settings.logo | img_url: image_size, scale: 2 }} 2x"
+               alt="{{ section.settings.logo.alt | default: shop.name }}"
+               itemprop="logo">
+          <h4 class="m-0">&thinsp;{{ shop.name }}</h4>
+        </a>
+
+      </div>
+      <div>
+        &nbsp; Copyright &copy; {{ 'now' | date: '%Y' }}
+      </div>
+    
+    {% endcapture %}
+    
+    {{ footer_social }}
+    
+    <div class="row my-4">
+      
+      <div class="col-12 col-sm-4 col-md-3 d-md-inline-block d-none">{{ logo_column }}</div>
+      
+      {% if linklists[section.settings.footer_link_list].links.size > 0 %}
+      {% for link in linklists[section.settings.footer_link_list].links %}
+      
+      <div class="col-12 col-sm-4 col-md-3">   
+        <ul class="no-bullets site-footer__linklist">
+          <li><strong>{{ link.title }}</strong></li>
+          {% for childlink in link.links %}
+          <li><a href="{{ childlink.url }}">{{ childlink.title }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      
+      {% endfor %}
+      {% endif %}
+      
+    </div>
+    
+    <div class="row text-center m-0">
+      <div class="col-12 d-inline-block d-md-none text-center mb-1">{{ logo_column }}</div>
+      <div class="col-12">Made with &#x1f499; by the {{ "UWOSP Team" | link_to: "/pages/team" }}</div>
+    </div>
+    
+  </div>
+  
+</footer>
+
+{% style %}
+
+.social-media-link-wrapper {
+	width: 2.5rem;
+	height: 2.5rem;
+	font-size: 1.25rem;
+	border-radius: 50%;
+}
+
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Payment methods"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Language Selector",
+      "info": "To add a language, go to your [language settings.](/admin/settings/languages)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_locale_selector",
+      "label": "Show language selector",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Currency Selector",
+      "info": "To add a currency, go to your [currency settings.](/admin/settings/payments)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_currency_selector",
+      "label": "Show currency selector",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Menu"
+    },
+    {
+      "type": "link_list",
+      "id": "footer_link_list",
+      "label": "Footer menu",
+      "default": "footer"
+    },
+	{
+	  "type": "image_picker",
+	  "id": "logo",
+	  "label": "Logo"
+	},
+	{
+      "type": "range",
+      "id": "logo_max_width",
+      "label": "Custom logo width",
+      "min": 20,
+      "max": 260,
+      "step": 5,
+      "unit": "px",
+      "default": 180
+    }
+  ]
+}
+{% endschema %}

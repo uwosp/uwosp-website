@@ -1,0 +1,171 @@
+<script>
+	var orphan_report_urls = [];
+</script>
+
+{% if section.settings.video_url != blank %}
+<div class="wrapper mb-5">
+  <div class="grid">
+    <div class="grid__item one-whole">
+      <div class="video-wrapper">
+          {% if section.settings.video_url.type == "youtube" %}
+            <iframe src="//www.youtube.com/embed/{{ section.settings.video_url.id }}?rel=0&showinfo=0&vq=720" width="850" height="480" frameborder="0" allowfullscreen></iframe>
+          {% endif %}
+          {% if section.settings.video_url.type == "vimeo" %}
+            <iframe src="//player.vimeo.com/video/{{ section.settings.video_url.id }}?color={{ settings.color_secondary | remove: "#" }}&byline=0&portrait=0&badge=0" width="850" height="480" frameborder="0" allowfullscreen></iframe>
+          {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% for block in section.blocks %}
+<div class="wrapper shopify-section {% if forloop.first == false %}mt-5{% endif %}">
+  <div class="page-width feature-row">
+    {% capture media_layout %}
+      <div class="feature-row__item">
+        {% if block.settings.image != blank %}
+          <noscript>
+            {{ block.settings.image | img_url: '600x600' | img_tag: block.settings.image.alt, 'feature-row__image-no-js' }}
+          </noscript>
+          <div class="feature-row__image-wrapper" style="padding-top:{{ 1 | divided_by: block.settings.image.aspect_ratio | times: 100}}%;">
+            {% assign img_url = block.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' %}
+            <img class="featured-row-img-zoom feature-row__image lazyload"
+              src="{{ block.settings.image | img_url: '300x300' }}"
+              data-src="{{ img_url }}"
+              data-widths="[360, 540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2048]"
+              data-aspectratio="{{ block.settings.image.aspect_ratio }}"
+              data-sizes="auto"
+              alt="{{ block.settings.image.alt | escape }}">
+        </div>
+        {% else %}
+          {{ 'image' | placeholder_svg_tag: 'placeholder-svg featured-row-img-zoom' }}
+        {% endif %}
+      </div>
+    {% endcapture %}
+
+    <div class="feature-row">
+      {% if block.settings.layout == 'left' %}
+        {{ media_layout }}
+      {% endif %}
+
+      <div class="feature-row__item feature-row__text feature-row__text--{{ block.settings.layout }}">
+        {% if block.settings.title != blank %}
+          <h2 class="h3">{{ block.settings.title | escape }}</h2>
+        {% endif %}
+        {% if block.settings.text != blank %}
+          <div class="rte-setting featured-row__subtext">{{ block.settings.text }}</div>
+        {% endif %}
+        {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+          <a id="orphan-report-btn-{{ forloop.index0 }}" target="_blank" href="{{ block.settings.button_link }}" class="btn">
+            {{ block.settings.button_label | escape }}
+          </a><select id="report-year-select-{{ forloop.index0 }}" style="vertical-align: top" name="year" onchange="change_report_url(this)">
+        
+        {% assign year_list = block.settings.years | newline_to_br | split: '<br />' %}
+        
+        {% for year in year_list %}
+        	<option value="{{ forloop.index0 }}"
+			{% if forloop.last %}
+				selected
+			{% endif %}
+			>{{ year }}</option>
+        {% endfor %}
+        </select>
+        {% endif %}
+        
+        <script type="text/javascript">
+          var report_list = {{ block.settings.report_links | json }}.split(/\r?\n/);
+		  orphan_report_urls.push(report_list);
+        </script>
+        
+      </div>
+      {% if block.settings.layout == 'right' %}
+        {{ media_layout }}
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+<script>
+  function change_report_url(select_element) {
+    var ind = parseInt(select_element.value);
+    var num = select_element.id.slice(select_element.id.length - 1);
+    var btn_element = document.getElementById("orphan-report-btn-" + num);
+    btn_element.href = orphan_report_urls[parseInt(num)][ind];
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Orphans",
+  "max_blocks": 10,
+  "settings": [
+	{
+	  "type": "video_url",
+	  "id": "video_url",
+	  "label": "Video Link",
+	  "accept": ["youtube", "vimeo"]
+	}
+  ],
+  "blocks": [
+	{
+		"type": "image_with_text",
+		"name": "Image with text",
+		"settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "select",
+            "id": "layout",
+            "label": "Image alignment",
+            "default": "left",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              },
+              {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading"
+          },
+          {
+            "type": "richtext",
+            "id": "text",
+            "label": "Text"
+          },
+          {
+            "type": "text",
+            "id": "button_label",
+            "label": "Button label"
+          },
+    	  {
+      		"type": "url",
+      		"id": "button_link",
+      		"label": "Button link"
+    	  },
+		  {
+			"type": "textarea",
+			"id": "years",
+			"label": "Report Years"
+		  },
+		  {
+			"type": "textarea",
+			"id": "report_links",
+			"label": "Report Links"
+		  }
+        ]
+	}
+  ]
+}
+{% endschema %}

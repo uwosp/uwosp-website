@@ -1,0 +1,24 @@
+<!-- /templates/page.liquid -->
+<div id="shopify-section-featured-content-team" class="shopify-section index-section rich-text-section">
+  <div data-section-id="featured-content" data-section-type="featured-content-section">
+    <div class="rich-text wrapper">
+      <div class="grid">
+        <div class="grid__item text-center large--two-thirds medium--two-thirds push--large--one-sixth push--medium--one-sixth">
+
+            <div class="section-header">
+              <h2 class="rich-text__heading--large section-header__title h1">{{ page.title }}</h2>
+              <hr class="hr--small">
+          	</div>
+
+            <div class="rte rich-text__text--large">
+              <p>{{ page.content }}</p>
+            </div>
+          
+        </div>
+      </div>
+      <div class="mt-5">
+      	{% section 'featured-team' %}
+      </div>
+    </div>
+  </div>
+</div>
